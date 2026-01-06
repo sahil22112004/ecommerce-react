@@ -3,26 +3,42 @@ import Card from "../Components/card";
 import "./DashBoard.css";
 import { Link } from "react-router";
 
-function DashBorad({ data, addToCart, cartItem }) {
+function DashBorad({ data, addToCart, page, setPage, total }) {
+  const LIMIT = 10;
   const [searchItem, setSearchItem] = useState("");
   const [searchResults, setSearchResults] = useState([]);
 
   useEffect(() => {
-    const timer = setTimeout(() =>{const fetchSearch = async () => {
-      const res = await fetch(
-        `https://dummyjson.com/products/search?q=${searchItem}`
-      );
-      const response = await res.json();
-      setSearchResults(response.products);
-    };
+    const timer = setTimeout(() => {
+      const fetchSearch = async () => {
+        if (searchItem.trim() === "") {
+          setSearchResults([]);
+          return;
+        }
 
-     fetchSearch();
-  },2000)
-   return () => clearTimeout(timer);
+        const res = await fetch(
+          `https://dummyjson.com/products/search?q=${searchItem}`
+        );
+        const response = await res.json();
+
+        setSearchResults(response.products);
+      };
+
+      fetchSearch();
+    }, 2000);
+
+    return () => clearTimeout(timer);
   }, [searchItem]);
 
-  const displayProducts =
-    searchItem.trim() !== "" ? searchResults : data;
+  useEffect(() => {
+    if (searchItem.trim() !== "") {
+      setPage(1);
+    }
+  }, [searchItem]);
+
+  const isSearching = searchItem.trim() !== "";
+  const displayProducts = isSearching ? searchResults : data;
+  const totalPages = Math.ceil(total / LIMIT);
 
   return (
     <>
@@ -52,13 +68,34 @@ function DashBorad({ data, addToCart, cartItem }) {
               description={item.description}
               price={item.price}
               addToCart={addToCart}
-              cartItem={cartItem}
             />
           ))
         ) : (
-         <p>No products found</p>
+          <p>No products found</p>
         )}
       </main>
+
+      {!isSearching && (
+        <div className="paging-section">
+          <button
+            disabled={page === 1}
+            onClick={() => setPage(page - 1)}
+          >
+            Prev
+          </button>
+
+          <span>
+            Page {page} of {totalPages}
+          </span>
+
+          <button
+            disabled={page === totalPages}
+            onClick={() => setPage(page + 1)}
+          >
+            Next
+          </button>
+        </div>
+      )}
 
       <footer>Ecommerce site</footer>
     </>

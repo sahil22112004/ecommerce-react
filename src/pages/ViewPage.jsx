@@ -35,7 +35,6 @@ function ViewPage() {
       <img src={product.thumbnail} alt={product.title} />
       <p>{product.description}</p>
       <h4>Price: ${product.price}</h4>
-      <button >Add To Cart</button>
     </div>
     </div>
   );

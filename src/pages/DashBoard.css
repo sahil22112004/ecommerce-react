@@ -59,3 +59,13 @@ footer {
   color: #fff;
   margin-top: 40px;
 }
+
+.paging-section{
+  text-align: center;
+  margin: 20px;
+
+}
+
+.paging-section span{
+  margin: 0 10px;
+}
