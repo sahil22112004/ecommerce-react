@@ -18,15 +18,6 @@ function App() {
     localStorage.setItem("cartItem", JSON.stringify(cartItem));
   },[cartItem])
 
-  const addToCart = (id)=>{
-
-    console.log("working",id)
-    const item = data.find((i) => i.id === id);
-   
-    setCartItem([...cartItem,item])
-    console.log(cartItem)
-
-  }
   useEffect(() => {
   const getData = async () => {
     try {
@@ -41,14 +32,54 @@ function App() {
 
 }, []);
 
-useEffect(()=>{
-  console.log(data)
-},[data])
+  // ✅ ADD TO CART
+  const addToCart = (id) => {
+    const product = data.find((item) => item.id === id);
+
+    const alreadyInCart = cartItem.find((item) => item.id === id);
+
+    if (alreadyInCart) {
+      setCartItem(
+        cartItem.map((item) =>
+          item.id === id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        )
+      );
+    } else {
+      setCartItem([...cartItem, { ...product, quantity: 1 }]);
+    }
+  };
+
+  // ✅ INCREMENT
+  const incrementQty = (id) => {
+    setCartItem(
+      cartItem.map((item) =>
+        item.id === id
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      )
+    );
+  };
+
+  // ✅ DECREMENT
+  const decrementQty = (id) => {
+    setCartItem(
+      cartItem
+        .map((item) =>
+          item.id === id
+            ? { ...item, quantity: item.quantity - 1 }
+            : item
+        )
+        .filter((item) => item.quantity > 0)
+    );
+  };
+
 
   return (
     <Routes>
-      <Route path="/" element={<DashBorad data={data} addToCart={addToCart} searchItem={searchItem} setSearchItem={setSearchItem} />}/>
-      <Route path="/cart" element={<CartPage cartItem={cartItem}/>} />
+      <Route path="/" element={<DashBorad data={data} cartItem={cartItem} addToCart={addToCart} searchItem={searchItem} setSearchItem={setSearchItem} />}/>
+      <Route path="/cart" element={<CartPage cartItem={cartItem} incrementQty={incrementQty} decrementQty={decrementQty} />} />
       <Route path="/viewpage/:id" element={<ViewPage />} />
     </Routes>
     

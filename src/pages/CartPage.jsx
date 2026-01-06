@@ -1,21 +1,32 @@
-import CartItem from "../Components/cartItem.jsx";
+import { Link } from "react-router";
+import CartItem from "../Components/cartItem";
+import "./cart.css"
 
-function CartPage({ cartItem }) {
+function CartPage({ cartItem, incrementQty, decrementQty }) {
   return (
-     <div className="cart-container">
-       <h1>Cart Page</h1>
-       {cartItem.length === 0 ? (
-         <p>Your cart is empty</p>
-       ) : (
-         cartItem.map((item) => (
-           <CartItem 
-             key={item.id} 
-             item={item} 
-           />
-         ))
-       )}
+    <div className="main-container">
+      <div className="header">
+        <Link to="/"><h1>Ecommerce</h1></Link>
+      </div >
+      <div className="cart-block">
+      <h3>Cart Page</h3>
+
+      {cartItem.length === 0 ? (
+        <p>Your cart is empty</p>
+      ) : (
+        cartItem.map((item) => (
+          <CartItem
+            key={item.id}
+            item={item}
+            incrementQty={incrementQty}
+            decrementQty={decrementQty}
+          />
+        ))
+      )}
+      </div>
     </div>
-    
   );
 }
-export default CartPage
+
+export default CartPage;
+

@@ -1,18 +1,22 @@
+import "./cartItem.css"
 
-function CartItem({ item}) {
+function CartItem({ item, incrementQty, decrementQty }) {
   return (
-    <div className="main-container" style={{ display: 'flex', border: '1px solid #ddd', padding: '10px' }}>
-      <img src={item.thumbnail} alt={item.title} style={{ width: '100px' }} />
-      <div>
+    <div className="main-container">
+      <img src={item.thumbnail} alt={item.title} width="100" />
+
+      <div style={{ marginLeft: "20px" }}>
         <h4>{item.title}</h4>
         <h4>${item.price}</h4>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <button >-</button>
-          <h4 style={{ margin: '0 10px' }}>quantity</h4>
-          <button >+</button>
+
+        <div>
+          <button onClick={() => decrementQty(item.id)}>-</button>
+          <span>{item.quantity}</span>
+          <button onClick={() => incrementQty(item.id)}>+</button>
         </div>
       </div>
     </div>
   );
 }
-export default CartItem
+
+export default CartItem;

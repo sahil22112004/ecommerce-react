@@ -1,40 +1,68 @@
-
-import Card from "../Components/card"
-import './DashBoard.css'
+import { useEffect, useState } from "react";
+import Card from "../Components/card";
+import "./DashBoard.css";
 import { Link } from "react-router";
 
-function DashBorad({ data ,addToCart, searchItem, setSearchItem}) {
-  
+function DashBorad({ data, addToCart, cartItem }) {
+  const [searchItem, setSearchItem] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+
+  useEffect(() => {
+    const timer = setTimeout(() =>{const fetchSearch = async () => {
+      const res = await fetch(
+        `https://dummyjson.com/products/search?q=${searchItem}`
+      );
+      const response = await res.json();
+      setSearchResults(response.products);
+    };
+
+     fetchSearch();
+  },2000)
+   return () => clearTimeout(timer);
+  }, [searchItem]);
+
+  const displayProducts =
+    searchItem.trim() !== "" ? searchResults : data;
 
   return (
     <>
       <header>
         <h1>DashBoard</h1>
-        <input 
-        type="text" 
-        placeholder="search your product....."
-        value={searchItem}
-        onChange={(e)=>e.target.value}
+
+        <input
+          type="text"
+          placeholder="Search products..."
+          value={searchItem}
+          onChange={(e) => setSearchItem(e.target.value)}
         />
-         <Link to="/cart"><button>Cart</button></Link>
+
+        <Link to="/cart">
+          <button>Cart</button>
+        </Link>
       </header>
+
       <main>
-        {data && data.map((item) => (
-          <Card 
-          key={item.id}
-          id={item.id}
-          image={item.thumbnail} 
-          name={item.brand}
-          description={item.description}
-          price ={item.price}
-          addToCart={addToCart}
-          
-          />
-        ))}
+        {displayProducts.length > 0 ? (
+          displayProducts.map((item) => (
+            <Card
+              key={item.id}
+              id={item.id}
+              image={item.thumbnail}
+              name={item.brand}
+              description={item.description}
+              price={item.price}
+              addToCart={addToCart}
+              cartItem={cartItem}
+            />
+          ))
+        ) : (
+         <p>No products found</p>
+        )}
       </main>
+
       <footer>Ecommerce site</footer>
     </>
   );
 }
 
-export default DashBorad
+export default DashBorad;
