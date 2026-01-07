@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import CartItem from "../Components/cartItem";
-import "./cart.css"
+import "./Cart.css"
 
 function CartPage({ cartItem, incrementQty, decrementQty }) {
   return (
