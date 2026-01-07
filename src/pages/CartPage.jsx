@@ -1,8 +1,14 @@
 import { Link } from "react-router";
 import CartItem from "../Components/cartItem";
 import "./Cart.css"
+import { useEffect } from "react";
 
 function CartPage({ cartItem, incrementQty, decrementQty }) {
+
+  const TotalPrice = cartItem.reduce((total, item) => {
+    return total + (item.quantity * item.price);
+  }, 0);
+
   return (
     <div className="main-container">
       <div className="header">
@@ -24,6 +30,8 @@ function CartPage({ cartItem, incrementQty, decrementQty }) {
         ))
       )}
       </div>
+      <h3>{TotalPrice}</h3>
+
     </div>
   );
 }
